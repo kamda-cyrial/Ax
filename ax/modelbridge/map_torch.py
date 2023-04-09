@@ -173,7 +173,7 @@ class MapTorchModelBridge(TorchModelBridge):
         search_space: SearchSpace,
         observations: List[Observation],
         parameters: Optional[List[str]] = None,
-        **kwargs: Any,
+        **kwargs: Optional[Dict[str, Any]],
     ) -> None:
         """The difference from `TorchModelBridge._fit(...)` is that we use
         `self.parameters_with_map_keys` instead of `self.parameters`.

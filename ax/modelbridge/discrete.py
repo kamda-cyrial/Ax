@@ -4,7 +4,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, Any
 
 from ax.core.observation import (
     Observation,
@@ -54,6 +54,7 @@ class DiscreteModelBridge(ModelBridge):
         model: DiscreteModel,
         search_space: SearchSpace,
         observations: List[Observation],
+        **kwargs: Optional[Dict[str, Any]],
     ) -> None:
         self.model = model
         # Convert observations to arrays

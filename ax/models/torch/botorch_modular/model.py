@@ -28,6 +28,7 @@ from ax.models.torch.botorch_modular.utils import (
 )
 from ax.models.torch.utils import _to_inequality_constraints
 from ax.models.torch_base import TorchGenResults, TorchModel, TorchOptConfig
+from ax.models.base import Model as BaseModel
 from ax.utils.common.base import Base
 from ax.utils.common.constants import Keys
 from ax.utils.common.docutils import copy_doc
@@ -265,7 +266,6 @@ class BoTorchModel(TorchModel, Base):
                 `Keys.ONLY_SURROGATE.
             refit: Whether to re-optimize model parameters.
         """
-
         if len(datasets) != len(metric_names):
             raise ValueError(
                 "Length of datasets and metric_names must match, but your inputs "
@@ -279,14 +279,16 @@ class BoTorchModel(TorchModel, Base):
         # Step 0. If the user passed in a preconstructed surrogate we won't have a
         # SurrogateSpec and must assume we're fitting all metrics
         if Keys.ONLY_SURROGATE in self._surrogates.keys():
+            if "state_dict" not in kwargs or kwargs["state_dict"] is None:
+                kwargs["state_dict"] = (
+                    state_dicts.get(Keys.ONLY_SURROGATE) if state_dicts else None
+                )
+
             self._surrogates[Keys.ONLY_SURROGATE].fit(
                 datasets=datasets,
                 metric_names=metric_names,
                 search_space_digest=search_space_digest,
                 candidate_metadata=candidate_metadata,
-                state_dict=state_dicts.get(Keys.ONLY_SURROGATE)
-                if state_dicts
-                else None,
                 refit=refit,
                 **kwargs,
             )
@@ -704,3 +706,11 @@ class BoTorchModel(TorchModel, Base):
         for k, v in self.surrogates.items():
             outcomes_by_surrogate_label[k] = v.outcomes
         return outcomes_by_surrogate_label
+
+    # @copy_doc(BaseModel._get_state)
+    # def _get_state(self) -> Dict[str, Any]:
+    #     state = super()._get_state()
+    #     state_dict = self.surrogates[Keys.ONLY_SURROGATE].model.state_dict()
+    #     state.update(state_dict)
+    #     print("This is the state dict: ", state_dict)
+    #     return state

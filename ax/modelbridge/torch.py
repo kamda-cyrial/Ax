@@ -109,6 +109,7 @@ class TorchModelBridge(ModelBridge):
         fit_abandoned: bool = False,
         fit_on_init: bool = True,
         default_model_gen_options: Optional[TConfig] = None,
+        **kwargs: Any,
     ) -> None:
         self.dtype: torch.dtype = torch.double if torch_dtype is None else torch_dtype
         self.device = torch_device
@@ -135,6 +136,7 @@ class TorchModelBridge(ModelBridge):
             fit_out_of_design=fit_out_of_design,
             fit_abandoned=fit_abandoned,
             fit_on_init=fit_on_init,
+            **kwargs,
         )
 
     def feature_importances(self, metric_name: str) -> Dict[str, float]:
@@ -483,7 +485,7 @@ class TorchModelBridge(ModelBridge):
         search_space: SearchSpace,
         observations: List[Observation],
         parameters: Optional[List[str]] = None,
-        **kwargs: Any,
+        **kwargs: Optional[Dict[str, Any]],
     ) -> None:  # pragma: no cover
         if self.model is not None and observations == self._last_observations:
             logger.info(

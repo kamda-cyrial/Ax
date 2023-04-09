@@ -97,6 +97,7 @@ class ModelBridge(ABC):
         fit_out_of_design: bool = False,
         fit_abandoned: bool = False,
         fit_on_init: bool = True,
+        **kwargs: Any,
     ) -> None:
         """
         Applies transforms and fits model.
@@ -189,6 +190,7 @@ class ModelBridge(ABC):
                 search_space=search_space,
                 observations=observations,
                 time_so_far=time.monotonic() - t_fit_start,
+                **kwargs,
             )
 
     def _fit_if_implemented(
@@ -196,6 +198,7 @@ class ModelBridge(ABC):
         search_space: SearchSpace,
         observations: List[Observation],
         time_so_far: float,
+        **kwargs: Any,
     ) -> None:
         r"""Fits the model if `_fit` is implemented and stores fit time.
 
@@ -212,6 +215,7 @@ class ModelBridge(ABC):
                 model=self.model,
                 search_space=search_space,
                 observations=observations,
+                **kwargs,
             )
             increment = time.monotonic() - t_fit_start + time_so_far
             self.fit_time += increment
@@ -481,6 +485,7 @@ class ModelBridge(ABC):
         model: Any,
         search_space: SearchSpace,
         observations: List[Observation],
+        **kwargs: Optional[Dict[str, Any]],
     ) -> None:
         """Apply terminal transform and fit model."""
         raise NotImplementedError  # pragma: no cover

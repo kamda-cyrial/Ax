@@ -339,7 +339,7 @@ class ModelRegistryBase(Enum):
                 function=bridge_class, omit=["experiment", "search_space", "data"]
             ),
         )
-
+        bridge_kwargs.update(kwargs)
         # Create model bridge with the consolidated kwargs.
         model_bridge = bridge_class(
             search_space=search_space or not_none(experiment).search_space,
