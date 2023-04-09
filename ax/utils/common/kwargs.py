@@ -92,7 +92,7 @@ def validate_kwarg_typing(typed_callables: List[Callable], **kwargs: Any) -> Non
                             logger.warning(message)
 
     # check if kwargs contains keywords not exist in any callables
-    extra_keywords = []  # [kw for kw in kwargs.keys() if kw not in checked_kwargs]
+    extra_keywords = [kw for kw in kwargs.keys() if kw not in checked_kwargs]
     if len(extra_keywords) != 0:
         raise ValueError(
             f"Arguments {extra_keywords} are not expected by any of {typed_callables}."

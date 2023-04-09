@@ -109,6 +109,8 @@ class TorchModelBridge(ModelBridge):
         fit_abandoned: bool = False,
         fit_on_init: bool = True,
         default_model_gen_options: Optional[TConfig] = None,
+        refit: bool = True,
+        state_dict: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ) -> None:
         self.dtype: torch.dtype = torch.double if torch_dtype is None else torch_dtype
@@ -122,6 +124,13 @@ class TorchModelBridge(ModelBridge):
                 optimization_config or experiment.optimization_config
             )
             self.is_moo_problem = optimization_config.is_moo_problem
+
+        kwargs.update(
+            {
+                "refit": refit,
+                "state_dict": state_dict,
+            }
+        )
 
         super().__init__(
             experiment=experiment,
